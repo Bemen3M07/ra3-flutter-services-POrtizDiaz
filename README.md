@@ -151,3 +151,43 @@ flutter build apk
 ```
 
 Si totes les comandes passen, el teu flux de plantilla neta és correcte.
+
+REALITZACIÓ PRÁCTICA:
+
+## Exercici 1: Connexió a l'API i Creació de Models
+
+En aquesta primera fase, s'ha construït l'arquitectura bàsica per obtenir i processar les dades de l'API de cotxes.
+
+**Passos realitzats:**
+1. **Registre i credencials:** He creat un compte a RapidAPI, m'he subscrit a l'API "Car Data" i he obtingut la meva `X-RapidAPI-Key`.
+2. **Proves amb Postman:** He provat l'endpoint `GET /cars` per analitzar l'estructura del JSON de resposta i veure quins camps retornava (`id`, `make`, `model`, `year`, `type`).
+3. **Creació del Model (`CarsModel`):** He creat la classe de dades a Flutter, implementant el mètode `fromMapToCarObject` per traduir els diccionaris JSON a objectes de Dart de forma segura.
+4. **Creació del Servei HTTP (`CarHttpService`):** He importat el paquet `http` i he programat la petició asíncrona a la URL base, afegint les capçaleres d'autenticació necessàries i descodificant la resposta si el codi d'estat és 200 (OK).
+5. **Test Unitari Personalitzat:** He modificat el fitxer `widget_test.dart` per instanciar el servei i comprovar mitjançant funcions `expect` que la llista retorna exactament els 10 primers cotxes sol·licitats. S'ha imprès el resultat per consola amb el meu nom per verificar-ne l'autoria.
+
+---
+
+## Exercici 2: Integrar Vista i Model (Provider + ListView)
+
+En la segona fase, s'han traslladat les dades obtingudes al servei a una interfície gràfica d'usuari (GUI) fluida i reactiva.
+
+**Passos realitzats:**
+1. **Instal·lació del paquet:** He afegit la dependència `provider` al fitxer `pubspec.yaml` mitjançant la terminal.
+2. **Creació del Provider (`CarsProvider`):** He creat una classe que hereta de `ChangeNotifier`. Aquesta classe s'encarrega de fer la crida a `CarHttpService`, gestionar l'estat de càrrega (`isLoading`) i cridar `notifyListeners()` per actualitzar la vista quan les dades estan llestes.
+3. **Injecció de dependències (`main.dart`):** He modificat l'arrel de l'aplicació (`MyApp`) embolicant-la amb un `MultiProvider` per fer que `CarsProvider` estigui disponible a tota l'app.
+4. **Consum del Provider:** A la pantalla principal (`MyHomePage`), he utilitzat `Provider.of<CarsProvider>(context)` per escoltar els canvis d'estat.
+5. **Creació de la Interfície (`ListView.builder`):** S'ha implementat una condició on es mostra un `CircularProgressIndicator` mentre les dades carreguen. Un cop carregades, es construeix una llista eficient on cada cotxe es mostra dins d'un giny `ListTile` (amb la seva icona, marca, model, any i tipus).
+6. **Personalització:** He modificat l'`AppBar` de l'aplicació perquè mostri el text "Cotxes de [EL TEU NOM I COGNOM]".
+
+---
+
+## Exercici 3: App d'Acudits Aleatoris
+
+S'ha implementat una aplicació interactiva consumint l'API d'acudits (SampleAPIs) i aplicant una estricta separació entre Vista, Controlador i Model.
+
+**Passos realitzats:**
+1. **Model:** Creació de `JokeModel` per estructurar les respostes (`setup` i `punchline`).
+2. **Servei:** Creació de `JokeHttpService`, que obté la llista d'acudits i en retorna un de forma completament aleatòria utilitzant `dart:math`.
+3. **Controlador:** S'ha desenvolupat `JokeProvider` per fer d'intermediari. Aquest exposa el mètode `fetchNewJoke()` per actualitzar l'estat de forma reactiva.
+4. **Vista:** Creació de `Exercici3Screen` on es mostren les dades. Incorpora un botó flotant que permet a l'usuari sol·licitar un nou acudit sota demanda de forma infinita.
+5. **Navegació:** S'ha creat un `MainMenuScreen` centralitzat al `main.dart` per poder navegar còmodament entre l'exercici dels cotxes i el dels acudits.

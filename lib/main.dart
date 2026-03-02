@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hello_world/exercici4.dart';
+import 'package:flutter_hello_world/providers/tmb_provider.dart';
 import 'package:provider/provider.dart';
 
 // Importem els providers
@@ -16,6 +18,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => CarsProvider()),
         ChangeNotifierProvider(create: (_) => JokeProvider()),
+        ChangeNotifierProvider(create: (_) => TmbProvider()),
       ],
       child: const MyApp(),
     ),
@@ -87,6 +90,25 @@ class MainMenuScreen extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                 textStyle: const TextStyle(fontSize: 18),
+              ),
+            ),
+            const SizedBox(height: 30),
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Exercici4Screen()),
+                );
+              },
+              icon: const Icon(Icons.directions_bus),
+              label: const Text('Anar a Exercici 4 (TMB)'),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                textStyle: const TextStyle(fontSize: 18),
+                backgroundColor: Colors.red[700],
+                foregroundColor: Colors.white,
               ),
             ),
           ],
