@@ -1,66 +1,97 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+// Importem els providers
 import 'providers/cars_provider.dart';
+import 'providers/joke_provider.dart';
+
+// Importem les pantalles dels exercicis
+import 'exercici2.dart';
+import 'exercici3.dart';
 
 void main() {
   runApp(
-    // 1. Emboliquem tota l'app amb el Provider
+    // Posem els DOS providers aquí perquè estiguin disponibles a qualsevol pantalla
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CarsProvider()),
+        ChangeNotifierProvider(create: (_) => JokeProvider()),
       ],
       child: const MyApp(),
     ),
   );
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Llista de Cotxes',
+      title: 'Pràctica 5d Flutter',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: const MainMenuScreen(),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
+// Pantalla del menú principal
+class MainMenuScreen extends StatelessWidget {
+  const MainMenuScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // 2. Escoltem el provider per veure si hi ha canvis
-    final carsProvider = Provider.of<CarsProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Menú Principal'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // ELEMENT DE LA RÚBRICA: Personalització amb el teu nom
-        title: const Text('Cotxes de [Pedro Ortiz]'), 
       ),
-      // 3. Si està carregant mostrem la rodeta, si no, mostrem la ListView
-      body: carsProvider.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: carsProvider.cars.length,
-              itemBuilder: (context, index) {
-                final car = carsProvider.cars[index];
-                // 4. Pintem cada cotxe amb un ListTile (un disseny de fila predeterminat)
-                return ListTile(
-                  leading: const CircleAvatar(
-                    child: Icon(Icons.directions_car),
-                  ),
-                  title: Text('${car.make} ${car.model}'),
-                  subtitle: Text('Any: ${car.year} - Tipus: ${car.type}'),
-                  trailing: Text('#${car.id}'),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Botó per anar a l'Exercici 2
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Exercici2Screen()),
                 );
               },
+              icon: const Icon(Icons.directions_car),
+              label: const Text('Anar a Exercici 2 (Cotxes)'),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
             ),
+            const SizedBox(height: 30),
+
+            // Botó per anar a l'Exercici 3
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const Exercici3Screen()),
+                );
+              },
+              icon: const Icon(Icons.sentiment_very_satisfied),
+              label: const Text('Anar a Exercici 3 (Acudits)'),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                textStyle: const TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
